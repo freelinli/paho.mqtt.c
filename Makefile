@@ -117,6 +117,9 @@ ASYNC_TESTS = ${addprefix ${blddir}/test/,${TEST_FILES_A}}
 TEST_FILES_AS = test5
 ASYNC_SSL_TESTS = ${addprefix ${blddir}/test/,${TEST_FILES_AS}}
 
+
+INSTALL_TO_SNAKE = snake_install
+
 # The names of the four different libraries to be built
 MQTTLIB_C = paho-mqtt3c
 MQTTLIB_CS = paho-mqtt3cs
@@ -211,11 +214,12 @@ endif
 
 all: build
 
-build: | mkdir ${MQTTLIB_C_TARGET} ${MQTTLIB_CS_TARGET} ${MQTTLIB_A_TARGET} ${MQTTLIB_AS_TARGET} ${MQTTVERSION_TARGET} ${SYNC_SAMPLES} ${SYNC_UTILS} ${ASYNC_SAMPLES} ${ASYNC_UTILS} ${SYNC_TESTS} ${SYNC_SSL_TESTS} ${ASYNC_TESTS} ${ASYNC_SSL_TESTS}
+build: | mkdir ${MQTTLIB_C_TARGET} ${MQTTLIB_CS_TARGET} ${MQTTLIB_A_TARGET} ${MQTTLIB_AS_TARGET} ${MQTTVERSION_TARGET} ${SYNC_SAMPLES} ${SYNC_UTILS} ${ASYNC_SAMPLES} ${ASYNC_UTILS} ${SYNC_TESTS} ${SYNC_SSL_TESTS} ${ASYNC_TESTS} ${ASYNC_SSL_TESTS} ${INSTALL_TO_SNAKE}
 
 clean:
 	rm -rf ${blddir}/*
 	rm -rf ${blddir_work}/*
+	rm -rf ./lib*
 
 mkdir:
 	-mkdir -p ${blddir}/samples
@@ -275,6 +279,9 @@ ${MQTTVERSION_TARGET}: $(srcdir)/MQTTVersion.c $(srcdir)/MQTTAsync.h $(MQTTLIB_A
 
 strip_options:
 	$(eval INSTALL_OPTS := -s)
+
+$(INSTALL_TO_SNAKE):
+	@$(INSTALL_DATA) ${INSTALL_OPTS} build/output/lib* ./
 
 install-strip: build strip_options install
 
